@@ -1,13 +1,9 @@
 import React from 'react'
 import { CustomPlaceholder } from 'react-placeholder-image'
-import { useBaseContext } from '../ContextProvider'
 import Container from './Container'
 import LoadWallet from './LoadWallet'
 
-const ConnectModal = ({ title, src }) => {
-
-    const { toggleModal } = useBaseContext()
-
+const ConnectModal = ({ title, toggleModal, handleManualModal, src }) => {
 
     return (
         <section className='fixed top-2/4 left-2/4 w-5/6 -translate-x-1/2 -translate-y-1/2 max-w-lg bg-white shadow-2xl rounded-lg overflow-hidden space-y-8 h-max pb-4'>
@@ -21,7 +17,7 @@ const ConnectModal = ({ title, src }) => {
 
             <div>
                 <Container container_class="space-y-6">
-                    <LoadWallet />
+                    <LoadWallet handleManualModal={handleManualModal} />
                     <div className="flex justify-between items-center border-black border-solid border py-2 px-4 rounded-md" >
                         <div>
                             <h5 className='font-normal text-lg'>{title || "Wallet"}</h5>

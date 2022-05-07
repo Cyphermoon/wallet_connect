@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import { PulseLoader } from 'react-spinners';
-import { useBaseContext } from '../ContextProvider';
 
 
-const LoadWallet = () => {
+const LoadWallet = ({ handleManualModal }) => {
     let [data, setData] = useState(null)
 
-    const { handleManualModal } = useBaseContext()
     const { promiseInProgress } = usePromiseTracker()
 
     useEffect(() => {

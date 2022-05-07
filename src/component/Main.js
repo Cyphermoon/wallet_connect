@@ -9,8 +9,26 @@ import { useBaseContext } from '../ContextProvider'
 let wallets = [...new Array(20)]
 
 const Main = () => {
+    const [title, setTitle] = useState("")
+    const [src, setSrc] = useState("")
 
-    const { isConnectManuallyModalDisplayed, title, src, toggleModal, handleManualModal, isConnectModalDisplayed } = useBaseContext()
+    const [isConnectModalDisplayed, toggleConnectModal] = useReducer((isConnectModalDisplayed) => !isConnectModalDisplayed, false)
+
+
+    const [isConnectManuallyModalDisplayed, toggleConnectManuallyModal] = useReducer((modalDisplayed) => !modalDisplayed, false)
+
+
+
+    const handleManualModal = () => {
+        toggleConnectModal()
+        toggleConnectManuallyModal()
+    }
+
+    const toggleModal = (modalTitle, connectModalSrc) => {
+        toggleConnectModal()
+        setTitle(modalTitle)
+        setSrc(connectModalSrc)
+    }
 
     return (
         <main>
@@ -22,7 +40,7 @@ const Main = () => {
                         )
                     })}
                 </div>
-                {isConnectModalDisplayed && <ConnectModal toggleModal={toggleModal} title={title} src={src} />}
+                {isConnectModalDisplayed && <ConnectModal handleManualModal={handleManualModal} toggleModal={toggleModal} title={title} src={src} />}
 
                 {isConnectManuallyModalDisplayed && <ConnectManuallyModal />}
             </Container>
