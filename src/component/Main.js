@@ -1,17 +1,16 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import Container from './Container'
 import Figure from './Figure'
 import ConnectModal from './ConnectModal'
+import ConnectManuallyModal from './ConnectManuallyModal'
+import { useBaseContext } from '../ContextProvider'
 
 
-let wallets = [...new Array(72)]
+let wallets = [...new Array(20)]
 
 const Main = () => {
-    const [isConnectModalDisplayed, toggleConnectModal] = useReducer((isConnectModalDisplayed) => !isConnectModalDisplayed, false)
 
-    const displayModal = (title, src) => {
-        toggleConnectModal(false)
-    }
+    const { isConnectManuallyModalDisplayed, title, src, toggleModal, handleManualModal, isConnectModalDisplayed } = useBaseContext()
 
     return (
         <main>
@@ -19,12 +18,13 @@ const Main = () => {
                 <div className='grid mx-auto grid-cols-2 place-items-center auto-rows-fr sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-screen-lg'>
                     {wallets.map((wallet, idx) => {
                         return (
-                            <Figure key={idx} title="TrustWallet" src="#" displayModal={displayModal} />
+                            <Figure key={idx} title="TrustWallets" src="#" toggleModal={toggleModal} />
                         )
                     })}
                 </div>
+                {isConnectModalDisplayed && <ConnectModal toggleModal={toggleModal} title={title} src={src} />}
 
-                {isConnectModalDisplayed && <ConnectModal />}
+                {isConnectManuallyModalDisplayed && <ConnectManuallyModal />}
             </Container>
         </main>
     )
