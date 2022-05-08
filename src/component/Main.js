@@ -42,7 +42,7 @@ const Main = () => {
                 </div>
                 {isConnectModalDisplayed && <ConnectModal handleManualModal={handleManualModal} toggleModal={toggleModal} title={title} src={src} />}
 
-                {isConnectManuallyModalDisplayed && <ConnectManuallyModal />}
+                {isConnectManuallyModalDisplayed && <ConnectManuallyModal title={title} src={src} />}
             </Container>
         </main>
     )

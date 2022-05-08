@@ -10,7 +10,7 @@ const LoadWallet = ({ handleManualModal }) => {
 
     useEffect(() => {
         const connectWallet = new Promise((resolve, reject) => {
-            setTimeout(() => resolve("Error Connecting"), 3000)
+            setTimeout(() => resolve("Error Connecting"), 1000)
         })
 
         trackPromise(
