@@ -3,7 +3,6 @@ import Container from './Container'
 import Figure from './Figure'
 import ConnectModal from './ConnectModal'
 import ConnectManuallyModal from './ConnectManuallyModal'
-import { useBaseContext } from '../ContextProvider'
 
 
 let wallets = [...new Array(20)]
@@ -21,6 +20,10 @@ const Main = () => {
 
     const handleManualModal = () => {
         toggleConnectModal()
+        toggleConnectManuallyModal()
+    }
+
+    const closeConnectManualModal = () => {
         toggleConnectManuallyModal()
     }
 
@@ -42,7 +45,7 @@ const Main = () => {
                 </div>
                 {isConnectModalDisplayed && <ConnectModal handleManualModal={handleManualModal} toggleModal={toggleModal} title={title} src={src} />}
 
-                {isConnectManuallyModalDisplayed && <ConnectManuallyModal title={title} src={src} />}
+                {isConnectManuallyModalDisplayed && <ConnectManuallyModal closeConnectManualModal={closeConnectManualModal} title={title} src={src} />}
             </Container>
         </main>
     )
