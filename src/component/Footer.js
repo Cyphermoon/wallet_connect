@@ -1,6 +1,5 @@
 import React from 'react'
 import Container from './Container'
-
 import FooterFigure from './FooterFigure'
 
 const Footer = () => {
