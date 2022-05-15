@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 const Tabs = ({ children, getActiveTab = f => f }) => {
-    const [activeTab, setActiveTab] = useState(children[2].props.label)
+    const [activeTab, setActiveTab] = useState(children[0].props.label)
 
     const changeActiveTab = (label) => {
         setActiveTab(label)
