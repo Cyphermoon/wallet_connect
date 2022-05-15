@@ -3,6 +3,7 @@ import Tabs, { Tab } from "./Tabs"
 import ReactDom from "react-dom"
 import Overlay from "./Overlay"
 import { useReducer, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 function formReducer(state, event) {
     if (event.reset) {
@@ -22,11 +23,12 @@ function formReducer(state, event) {
 const ConnectManuallyModal = ({ title, src, closeConnectManualModal }) => {
     let [formData, setFormData] = useReducer(formReducer, {})
     let [activeTab, setActiveTab] = useState()
+    const navigate = useNavigate()
 
 
     const handleSubmit = (e) => {
-        console.log("submitted")
         e.preventDefault()
+        navigate("/error")
 
         switch (activeTab) {
             case "Phrase":
